@@ -1,0 +1,4 @@
+The game engine is under MIT license.
+
+The game content is under GPL license.
+The game content consists of the art assets and the quest files (/server/quest/**).

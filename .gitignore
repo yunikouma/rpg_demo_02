@@ -1,0 +1,14 @@
+admin
+node_modules
+db
+*.backup
+
+*.pdn
+
+#If websocket
+#*.png
+#*.html
+#*.mp3
+#*.ogg
+#*.css
+

@@ -1,0 +1,469 @@
+<% include ../partial/header.html %>
+
+<div class="container">
+	<h3>The Basics</h3>
+	<div style="max-width:500px">
+		<div class="aspect-ratio"><iframe src="http://www.youtube.com/embed/Xcan4jfDjYg" frameborder="0" allowfullscreen></iframe></div>
+	</div>
+
+	<h4>Quest</h4>
+	<p>Quests can be about anything in Raining Chain. For example:</p>
+	<ul class="">
+		<li class="">Kill monsters.</li>
+		<li class="">Fetch items.</li>
+		<li class="">Complete puzzle.</li>
+		<li class="">Play minigame.</li>
+		<li class="">PvP.</li>
+	</ul>
+	<br>
+	<h4>Events</h4>
+	<p>Events holds the logic of your quest. For example:</p>
+	<ul class="">
+		<li class="">Teleport player.</li>
+		<li class="">Give items.</li>
+		<li class="">Spawn monsters.</li>
+		<li class="">Display message.</li>
+		<li class="">Is the door locked?</li>
+	</ul>
+	<br>
+
+	<h4>Triggers</h4>
+	<p>Triggers tell the game engine when to trigger/call a specific event.</p>
+	<ul class="">
+		<li class="">When talking to a NPC (dialogue).</li>
+		<li class="">When NPC dies (deathEvent).</li>
+		<li class="">When toggling a switch.</li>
+		<li class="">When looting a chest.</li>
+		<li class="">When reaching a certain position.</li>
+		<li class="">When using item.</li>
+	</ul>
+
+	<br>
+	<h4>Maps</h4>
+	<p>Maps are responsible of the map images but also tell the game engine what NPC to spawn.</p>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>NPC (Ringo)</strong><br>
+			Trigger (dialogue) => Event (talkRingo)<br>
+			Trigger (deathEvent) => Event (killRingo)<br>
+		</li>
+		<li class="list-group-item">
+			<strong>NPC (Dragon)</strong><br>
+			Trigger (deathEvent) => Event (giveDragonHead)<br>
+		</li>
+		<li class="list-group-item">
+			<strong>NPC (Switch)</strong><br>
+			Trigger (toggle) => Event (openLockedDoor)<br>
+		</li>
+	</ul>
+	
+
+	<br>
+	<h4>Quest Variables</h4>
+	<p>Used to save the player progression in a quest. They will be modified by events. Each player has its own copy of variables.</p>
+	<ul class="">
+		<li class="">goblinKillCount = 1000</li>
+		<li class="">doorLocked = true</li>
+		<li class="">haveTalkedWithRingo = false</li>
+	</ul>
+
+	<br>
+	<h4>Event Functions</h4>
+	<p>
+		Most of the time, events are applied to a player in particular.<br>
+		Every player (and NPC) has a unique key.<br>
+		In your events, you can access the key of the player who triggered the event via the variable "key".<br>
+	</p>
+	<p>
+		<a href="/QuestCreator/API">Click here</a> to check the API (list of all functionalities you can use for events).
+	</p>
+	
+	<br>
+	<h4>Spawning Actors</h4>
+	<p>
+		For every NPC you create, you need to mark where it spawns inside the Tiled map project.<br>
+		To mark it, select the layer SPOT and places letters from the tileset #9.<br>
+		<img width="500px" src="/views/QuestCreator/mapEditor.png">
+	</p>
+	<p>
+		Every NPC can be customized via the "actorExtra" parameter to trigger events or change appearance.<br>
+		<a href="/QuestCreator/API#actorExtra">Click here</a> for the complete list.	
+	</p>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>dialogue</strong>: Event called when player selects "Talk to" option.
+		</li>
+		<li class="list-group-item">
+			<strong>deathEvent</strong>: Event called when NPC dies.
+		</li>
+		<li class="list-group-item">
+			<strong>viewedIf</strong>: If event returns true, the actor is visible.
+		</li>
+		<li class="list-group-item">
+			<strong>name</strong>: Diplay name.
+		</li>
+		<li class="list-group-item">
+			<strong>sprite</strong>: Image appearance.
+		</li>
+		<li class="list-group-item">
+			<strong>globalDef</strong>: Multiply defence by this value.
+		</li>
+		<li class="list-group-item">
+			<strong>globalDmg</strong>: Multiply damage by this value.
+		</li>	
+	</ul>
+	<br>	
+	<br>
+	<h3>Quest Example #1: The Basics & Death Event</h3>
+	<div style="max-width:500px">
+		<div class="aspect-ratio"><iframe src="http://www.youtube.com/embed/H2n5qIPZFcI" frameborder="0" allowfullscreen></iframe></div>
+	</div>
+	<h4>Download via Help -> Load Example -> Example #1</h4>
+	<h4>Logic</h4>
+	<ul class="">
+		<li class="">Talk with NPC who asks to kill Dragon.</li>
+		<li class="">Kill Dragon</li>
+		<li class="">Talk with NPC to complete quest</li>
+	</ul>
+
+	<h4>Variable</h4>
+	<ul class="">
+		<li class="">haveKilledDragon = false</li>
+	</ul>
+
+	<h4>Events</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>talkRingo</strong> (linked with "dialogue" trigger of NPC Ringo)<br>
+			if haveKilledDragon == false<br>
+			&nbsp;&nbsp;then ask player to kill dragon<br>
+			if haveKilledDragon == true<br>
+			&nbsp;&nbsp;then quest complete<br>
+		</li>
+		<li class="list-group-item">
+			<strong>killDragon</strong> (linked with "deathEvent" trigger of NPC Dragon)<br>
+			set haveKilledDragon = true
+		</li>
+	</ul>
+
+	<h4>Real Code</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>Variable</strong><br>
+			haveKilledDragon:false
+		</li>
+		<li class="list-group-item">
+			<strong>Event talkRingo:</strong><br>
+			if(s.get(key,'haveKilledDragon') == false)<br>
+			&nbsp;&nbsp;s.message(key,'Go kill the dragon.');<br>
+			if(s.get(key,'haveKilledDragon') == true)<br>
+			&nbsp;&nbsp;s.completeQuest(key);<br>
+		</li>
+		<li class="list-group-item">
+			<strong>Event killDragon:</strong><br>
+			s.set(key,'haveKilledDragon',true);
+		</li>
+		
+		<li class="list-group-item">
+			<strong>Map dragonLair:</strong><br>
+			//Tiled project as a n1 and e1 spots on layer SPOT<br>
+			m.spawnActor(spot.n1,'npc',{<br>
+			&nbsp;&nbsp;dialogue:'talkRingo'<br>		
+			});<br>
+			<br>
+			m.spawnActor(spot.e1,'dragon',{<br>
+			&nbsp;&nbsp;deathEvent:'killDragon'<br>
+			});
+		</li>
+	</ul>
+	
+	
+
+	<br>
+	<h3>Quest Example #2: Switch & Block</h3>
+	<div style="max-width:500px">
+		<div class="aspect-ratio" style="max-width:500px"><iframe src="http://www.youtube.com/embed/shIdIiMIgak" frameborder="0" allowfullscreen></iframe></div>
+	</div>
+	<h4>Download via Help -> Load Example -> Example #2</h4>
+	<h4>Logic</h4>
+	<ul class="">
+		<li class="">Rocks block path.</li>
+		<li class="">Activate switch to destroy them.</li>
+	</ul>
+
+	<h4>Variable</h4>
+	<ul class="">
+		<li class="">haveDestroyedRock = false</li>
+	</ul>
+
+	<h4>Events</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>activateSwitch</strong> (linked with "toggle" trigger of NPC Lever)<br>
+			set haveDestroyedRock = true		
+		</li>
+		<li class="list-group-item">
+			<strong>canActivateSwitch</strong> (linked with "viewedIf" attribute of NPC Lever)<br>
+			return true		
+		</li>
+		<li class="list-group-item">
+			<strong>canSeeRock</strong> (linked with "viewedIf" attribute of NPC Rock)<br>
+			if haveDestroyedRock == false<br>
+			&nbsp;&nbsp;return true (visible)<br>
+			if haveDestroyedRock == true<br>
+			&nbsp;&nbsp;return false (not visible)<br>
+		</li>
+	</ul>
+	
+	<h4>Real Code</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>Event activateSwitch:</strong><br>
+			s.set(key,'haveDestroyedRock',true);
+		</li>
+		<li class="list-group-item">
+			<strong>Event canActivateSwitch:</strong><br>
+			return true;
+		</li>
+		<li class="list-group-item">
+			<strong>Event canSeeRock:</strong><br>
+			if(s.get(key,'haveDestroyedRock') == false)<br>
+			&nbsp;&nbsp;return true;<br>
+			if(s.get(key,'haveDestroyedRock') == true)<br>
+			&nbsp;&nbsp;return false;<br>
+		</li>
+		
+		
+		
+		<li class="list-group-item">
+			<strong>Map mountain:</strong><br>
+			//Tiled project as a b1 and q1 spots on layer SPOT<br>
+			m.spawnBlock(spot.b1,'canSeeRock');<br>
+			<br>
+			m.spawnToggle(spot.q1,'canActivateSwitch','activateSwitch');<br>
+		</li>
+	</ul>
+	
+	
+	
+	
+	<br>
+	<h3>Quest Example #3: Dialogue, Item & Teleporter</h3>
+	<div style="max-width:500px">
+		<div class="aspect-ratio" style="max-width:500px"><iframe src="http://www.youtube.com/embed/ta1i-7cNvdY" frameborder="0" allowfullscreen></iframe></div>
+	</div>
+	<h4>Download via Help -> Load Example -> Example #3</h4>
+	<h4>Logic</h4>
+	<ul class="">
+		<li class="">Guy asks player to get letter from Girl.</li>
+		<li class="">Player teleport to Girl.</li>
+		<li class="">Player talks with Girl.</li>
+		<li class="">Player come back and talk with Guy.</li>
+	</ul>
+
+	<h4>Variable</h4>
+	<ul class="">
+		<li class="">None. (Have letter will be tested by checking inventory.)</li>
+	</ul>
+	
+	<h4>Item</h4>
+	<ul class="">
+		<li class="">Letter</li>
+	</ul>
+	
+	<h4>Dialogues</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>Guy:</strong><br>
+			Dialogue 1: Ask player to get letter.<br>
+			&nbsp;&nbsp;Option 1: Accept<br>
+		</li>
+		<li class="list-group-item">
+			<strong>Girl:</strong><br>
+			Dialogue 1: Ask player what he wants.<br>
+			&nbsp;&nbsp;Option 1: I want letter. (If selected, give item) <br>
+			&nbsp;&nbsp;Option 2: Nothing...<br>
+			<br>
+			Dialogue 2: She mentions that she gave the letter.<br>
+			Dialogue 3: Ask player to deliver it to Guy.<br>
+		</li>
+	</ul>
+	
+	<h4>Events</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>talkGuy</strong> (linked with "dialogue" trigger of NPC Guy)<br>
+			if player has item letter<br>
+			&nbsp;&nbsp;quest complete<br>
+			else<br>
+			&nbsp;&nbsp;start dialogue asking player to get letter<br>
+		</li>
+		<li class="list-group-item">
+			<strong>talkGirl</strong> (linked with "dialogue" trigger of NPC Guy)<br>
+			if player has item letter<br>
+			&nbsp;&nbsp;start dialogue asking player to deliver it to Guy<br>
+			else<br>
+			&nbsp;&nbsp;start dialogue where she will give letter<br>		
+		</li>
+		<li class="list-group-item">
+			<strong>giveLetter</strong> (triggered within Girl dialogue)<br>
+			give letter
+		</li>
+		<li class="list-group-item">
+			<strong>teleportToGirl</strong> (linked with "teleport" attribute of NPC Teleport1)<br>
+			teleport player near Girl	
+		</li>
+		<li class="list-group-item">
+			<strong>teleportToGuy</strong> (linked with "teleport" attribute of NPC Teleport2)<br>
+			teleport player near Guy	
+		</li>
+	</ul>
+	
+	<h4>Real Code</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>Event talkGuy:</strong><br>
+			if(s.haveItem(key,'letter')){<br>
+			&nbsp;&nbsp;s.completeQuest(key);<br>
+			} else<br>
+			&nbsp;&nbsp;s.startDialogue(key,'Guy','askFavor');<br>
+		</li>
+		<li class="list-group-item">
+			<strong>Event talkGirl:</strong><br>
+			if(s.haveItem(key,'letter'))<br>
+			&nbsp;&nbsp;s.startDialogue(key,'Girl','goDeliver');<br>
+			else<br>
+			&nbsp;&nbsp;s.startDialogue(key,'Girl','greeting');<br>
+		</li>		
+		<li class="list-group-item">
+			<strong>Event giveLetter:</strong><br>
+			s.addItem(key,'letter');
+		</li>
+		<li class="list-group-item">
+			<strong>Event teleportToGirl:</strong><br>
+			s.teleport(key,'main','t3');
+		</li>
+		<li class="list-group-item">
+			<strong>Event teleportToGuy:</strong><br>
+			s.teleport(key,'main','t2');
+		</li>
+		
+		
+		
+		<li class="list-group-item">
+			<strong>Map:</strong><br>
+			m.spawnActor(spot.n1,'npc',{<br>
+			&nbsp;&nbsp;name:'Guy',<br>
+			&nbsp;&nbsp;dialogue:'talkGuy',<br>
+			&nbsp;&nbsp;sprite:s.newNpc.sprite('villagerMale-4',1),<br>
+			});<br>
+			<br>
+			m.spawnActor(spot.n1,'npc',{<br>
+			&nbsp;&nbsp;name:'Girl',<br>
+			&nbsp;&nbsp;dialogue:'talkGirl',<br>
+			&nbsp;&nbsp;sprite:s.newNpc.sprite('villagerFemale-4',1),<br>
+			});<br>
+			<br>
+			m.spawnTeleporter(spot.t2,'teleportToGirl','zone','right');<br>
+			m.spawnTeleporter(spot.t3,'teleportToGuy','zone','left');<br>
+		</li>
+	</ul>
+	
+	<br>
+	<h3>Quest Example #4: Chest & NPC Tag</h3>
+	<div style="max-width:500px">
+		<div class="aspect-ratio" style="max-width:500px"><iframe src="http://www.youtube.com/embed/C54OKhFX_n8" frameborder="0" allowfullscreen></iframe></div>
+	</div>
+	<h4>Download via Help -> Load Example -> Example #3</h4>
+	<h4>Logic</h4>
+	<ul class="">
+		<li class="">Open a chest which gives a scroll item but also spawn monsters.</li>
+		<li class="">Use the item to kill all the monsters.</li>
+	</ul>
+
+	<h4>Variable</h4>
+	<ul class="">
+		<li class="">haveOpenedChest = false</li>
+	</ul>
+
+	<h4>Item</h4>
+	<ul class="">
+		<li class="">
+			Scroll: <br>
+			&nbsp;&nbsp;Option 1: Event useItem
+		</li>
+	</ul>
+	<h4>Events</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>canOpenChest</strong> (linked with "viewedIf" attribute of NPC Chest)<br>
+			if(haveOpenedChest == false)<br>
+			&nbsp;&nbsp;return true<br>
+			if(haveOpenedChest == true)<br>
+			&nbsp;&nbsp;return false
+		</li>
+		<li class="list-group-item">
+			<strong>openChest</strong> (linked with "loot" trigger of NPC Chest)<br>
+			set haveOpenedChest = true<br>
+			add item scroll<br>
+			spawn 3 monsters with tag "monster = true"
+		</li>
+		<li class="list-group-item">
+			<strong>useItem</strong> (linked with Item Scroll)<br>
+			for every npc in the map with the tag "monster = true",<br>
+			&nbsp;&nbsp;call the event killSelf
+		</li>
+		<li class="list-group-item">
+			<strong>killSelf</strong><br>
+			kill himself
+		</li>
+	</ul>
+	
+	<h4>Real Code</h4>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<strong>Event canOpenChest:</strong><br>
+			if(s.get(key,'haveOpenedChest') === false)<br>
+			&nbsp;&nbsp;return true;<br>
+			if(s.get(key,'haveOpenedChest') === true)<br>
+			&nbsp;&nbsp;return false;
+		</li>
+		<li class="list-group-item">
+			<strong>Event openChest:</strong><br>
+			s.set(key,'haveOpenedChest',true);<br>
+			s.addItem(key,'scroll');<br>
+			s.spawnActorOnTop(key,'main','bat',{<br>
+			&nbsp;&nbsp;tag:{monster:true}<br>
+			});<br>
+			s.spawnActorOnTop(key,'main','bat',{<br>
+			&nbsp;&nbsp;tag:{monster:true}<br>
+			});<br>
+			s.spawnActorOnTop(key,'main','bat',{<br>
+			&nbsp;&nbsp;tag:{monster:true}<br>
+			});
+		</li>
+		<li class="list-group-item">
+			<strong>Event useItem:</strong><br>
+			s.forEachActor(key,'main','killSelf','npc',false,{monster:true});
+		</li>
+		<li class="list-group-item">
+			<strong>Event killSelf:</strong><br>
+			s.killActor(key);
+		</li>
+		
+		<li class="list-group-item">
+			<strong>Map main:</strong><br>
+			m.spawnLoot(spot.q1,'canOpenChest','openChest','chest');<br>
+		</li>
+	</ul>
+	
+	<!-- -->
+	<br>
+	<a href="/QuestCreator/feedback">Feedback or questions?</a>
+	<br>
+</div>
+<% include ../partial/footer.html %>
+
+
+
+
